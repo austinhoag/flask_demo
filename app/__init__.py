@@ -4,6 +4,16 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from app.config import Config
 from celery import Celery
+from flask_sqlalchemy import SQLAlchemy
+import datajoint as dj
+
+dj.config['database.host'] = '127.0.0.1'
+dj.config['database.port'] = 3306
+dj.config['database.user'] = 'ahoag'
+dj.config['database.password'] = 'p@sswd'
+
+db = dj.create_virtual_module('ahoag_flask_demo','ahoag_flask_demo',create_schema=True) # creates the schema if it does not already exist. Can't add tables from within the app because create_schema=False
+
 
 cel = Celery(__name__,broker='amqp://localhost//',
 	backend='db+mysql+pymysql://ahoag:p@sswd@localhost:3306/ahoag_celery')
