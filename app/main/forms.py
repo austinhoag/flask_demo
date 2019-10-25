@@ -11,12 +11,13 @@ class SvgForm(FlaskForm):
 
 	species = SelectField('Species:', 
 		choices=[('mouse','mouse'),('rat','rat'),
-		         ('primate','primate'),('marsupial','marsupial')],
-		         validators=[InputRequired()])
+				 ('primate','primate'),('marsupial','marsupial')],
+				 validators=[InputRequired()])
 
 
 class PickCounty(FlaskForm):
-    form_name = HiddenField('Form Name')
-    state = SelectField('State:', validators=[DataRequired()], id='select_state')
-    county = SelectField('County:', validators=[DataRequired()], id='select_county')
-    submit = SubmitField('Select County!')
+	# form_name = HiddenField('Form Name')
+	state = SelectField('State:', choices=[],validators=[InputRequired()],id='select_state') # id used to access in javascript
+	county = SelectField('County:', validators=[DataRequired()],id='select_county')
+
+	submit = SubmitField('Select County!')
