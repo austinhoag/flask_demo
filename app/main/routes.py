@@ -43,3 +43,7 @@ def _get_counties():
 # @celery.task(name='celery_example.reverse') # if you don't put the name it infers the name for you and sometimes the name is not quite right
 # def reverse(name):
 #   return name[::-1]
+
+@main.route('/state_county_js')
+def state_county_js():
+    return render_template("js/state_county.js")
