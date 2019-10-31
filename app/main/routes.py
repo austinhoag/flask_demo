@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, Blueprint, session, url_for, flash, Markup,Request, jsonify
 from app import tasks, db
 from .forms import SvgForm, PickCounty
+from app import tables
 
 
 main = Blueprint('main',__name__)
@@ -47,3 +48,24 @@ def _get_counties():
 @main.route('/state_county_js')
 def state_county_js():
     return render_template("js/state_county.js")
+
+
+@main.route("/test_vert_layout") 
+def test_vert_layout(): 
+    test_data = [{'username':'user1','age':20,'sex':'F'},
+                 {'username':'user2','age':22,'sex':'M'},
+                 {'username':'user3','age':30,'sex':'F'}]
+    table = tables.TestTable(test_data)
+    return render_template('test_vertlayout.html',table=table)
+
+
+@main.route("/test_dynamic_form") 
+def test_dynamic_form(): 
+
+    return render_template('dynamic_form.html')    
+
+
+@main.route("/checkbox_action") 
+def checkbox_action(): 
+
+    return render_template('checkbox_action.html')  

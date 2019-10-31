@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+    {% block content %}
+        <form id="myform" method="post" action="submit.php">
+
+            <div class="form-group">
+                <div>
+                    <input type="number" id="numberfield" name="name[]" class="form-control" placeholder="Enter number"/>
+                    <input type="checkbox" id="mybox" name="vehicle1" value="Bike"> I have a bike<br>
+                    <input type="checkbox" id="mybox2" name="vehicle2" value="Car"> I have a car<br>
+                </div>
+            </div>
+
+        </form>
+
+
+    <script type="text/javascript">
+
+       $("#mybox").click(function() {
+    // this function will get executed every time the #mybox element is clicked (or tab-spacebar changed)
+    if($(this).is(":checked")) // "this" refers to the element that fired the event
+    {
+        var num = Number($('#numberfield').val());
+        // console.log(num);
+        // console.log(typeof(num));
+        var text = "";
+        // alert('mybox is checked');
+       for (i = 0; i < num; i++) {
+          text += '<div><input type="text" name="name[]" class="form-control" placeholder="Enter name"/></div>';
+        }
+        $('#myform').append(text)
+    }
+});
+    </script>
+    {% endblock content %}
