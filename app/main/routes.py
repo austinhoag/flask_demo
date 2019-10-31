@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, Blueprint, session, url_for, flash, Markup,Request, jsonify
 from app import tasks, db
-from .forms import SvgForm, PickCounty
+from .forms import SvgForm, PickCounty, ExperimentForm, BusinessForm
 from app import tables
 
 
@@ -69,3 +69,25 @@ def test_dynamic_form():
 def checkbox_action(): 
 
     return render_template('checkbox_action.html')  
+
+@main.route("/dynamic_samples") 
+def dynamic_samples(): 
+    form = ExperimentForm()
+    return render_template('dynamic_samples.html',form=form) 
+
+
+@main.route('/test_fieldlist', methods=['post','get'])
+def test_fieldlist():
+    form = BusinessForm()
+    if form.validate_on_submit():
+        results = []
+        for idx, data in enumerate(form.hours.data):
+            results.append('{day}: [{open}]:[{close}]'.format(
+                day=calendar.day_name[idx],
+                open=data["opening"],
+                close=data["closing"],
+                )
+            )
+        return render_template('results.html', results=results)
+    print(form.errors)
+    return render_template('test_fieldlist.html', form=form)

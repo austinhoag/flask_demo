@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, SelectField, BooleanField, HiddenField
+from wtforms import (StringField, SubmitField, TextAreaField, SelectField,
+					 BooleanField, HiddenField, IntegerField, FieldList, FormField)
 from wtforms.validators import DataRequired, Length, InputRequired, ValidationError, Email, Optional 
+from wtforms.widgets import html5
 
 # from lightserv.models import Experiment
 
@@ -21,3 +23,21 @@ class PickCounty(FlaskForm):
 	county = SelectField('County:', validators=[DataRequired()],id='select_county')
 
 	submit = SubmitField('Select County!')
+
+
+class ExperimentForm(FlaskForm):
+	# form_name = HiddenField('Form Name')
+	title = StringField('Title of experiment:',validators=[InputRequired()]) # id used to access in javascript
+	number_of_samples = IntegerField('Number of samples',widget=html5.NumberInput(),validators=[InputRequired()],id='nsamples')
+	customize_sample_names = BooleanField('Customize your sample names?',id='customize_checkbox')
+	submit = SubmitField('Submit')	
+
+
+class TimeForm(FlaskForm):
+    opening = StringField('Opening Hour')
+    closing = StringField('Closing Hour')
+    day = HiddenField('Day')
+
+class BusinessForm(FlaskForm):
+    name = StringField('Business Name')
+    hours = FieldList(FormField(TimeForm), min_entries=2,max_entries=7)

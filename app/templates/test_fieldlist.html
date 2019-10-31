@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+	{% block content %}
+
+	<form method="post" action="">
+		{{ form.name.label}}
+	    {{ form.name}}
+	    {{ form.hidden_tag() }}
+	    <br/>
+	    {% for entry in form.hours %}
+	        {{ loop.index0 }}
+	        {{ entry() }}
+	    {% endfor %}
+	    <input type="submit"/>
+	</form>
+	{% endblock content %}
