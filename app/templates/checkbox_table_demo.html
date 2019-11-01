@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+    {% block content %}
+               <form method="post">
+            <table>
+                <tr>
+                    <th>id</th>
+                    <th>start</th>
+                    <th>end</th>
+                    <th>entered already?</th>
+                </tr>
+                {% for day in form.days%}
+                <tr>   
+                    <td>{{day.index}}</td>
+                    <td>{{day.start_time}}</td>
+                    <td>{{day.end_time}}</td>
+                    <td>{{day.is_entered}}</td>
+                </tr>
+                {%endfor%}
+            </table>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-success mt-2") }}
+            </div>
+        </form>
+
+    {% endblock content %}

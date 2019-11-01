@@ -1,7 +1,9 @@
 from flask import render_template, request, redirect, Blueprint, session, url_for, flash, Markup,Request, jsonify
 from app import tasks, db
 from .forms import (SvgForm, PickCounty, ExperimentForm,
-                    BusinessForm, CustomBusinessForm )
+                    BusinessForm, CustomBusinessForm,
+                    CheckboxGridForm, GradeForm, WorkReportForm,
+                    ChannelListForm )
 from app import tables
 
 
@@ -136,3 +138,52 @@ def checkbox_getjson_flask():
     if form.validate_on_submit:
         print(form.data)
     return render_template('checkbox_getjson_flask.html',form=form)
+
+@main.route("/checkbox_grid_demo",methods=['GET','POST']) 
+def checkbox_grid_demo(): 
+    mydata = [{'channel':488,'registration':{'name':'reg_488','value':'reg_488'},
+    'injection_detection':{'name':'inj_488','value':'inj_488'}},
+              {'channel':555,'registration':{'name':'reg_555','value':'reg_555'},
+              'injection_detection':{'name':'inj_555','value':'inj_555'}}]
+
+    tab = tables.CheckBoxTable(mydata)
+    return render_template('checkbox_grid_demo.html',table=tab)
+
+@main.route("/checkbox_table_demo",methods=['GET','POST']) 
+def checkbox_table_demo(): 
+    if request.method == 'GET':
+        # form_days = db.session.query(Work_Time).filter_by(user_id=current_user.id).all()
+        form_days = [{'index':'0','start_time':'9am','end_time':'10pm'}]
+        form = WorkReportForm(days=form_days)
+    if request.method == 'POST':
+        
+        form = WorkReportForm(request.form)
+        print(form.data)
+        days = []
+        # for day in form.days:
+        #     print(day.index.data)
+            # Work_Time(id = day.index.data,\
+            #           user=current_user,\
+            #           date=day.date.data,\
+            #           start_time=day.start_time.data,\
+            #           end_time=day.end_time.data)
+    return render_template('checkbox_table_demo.html',form=form)    
+
+
+@main.route("/channel_table_demo",methods=['GET','POST']) 
+def channel_table_demo(): 
+    form = ChannelListForm(request.form)
+
+    if request.method == 'GET':
+        print("get request")
+        # channel_data = [{'channel':'488'},{'channel':'555'},
+        # {'channel':'647'},{'channel':'790'}]
+        # while len(form.channels) > 0:
+        #     form.channels.pop_entry()
+        # for ii in range(4):
+        #     form.channels.append_entry(channel_data[ii])
+        # print(form.data)
+    elif request.method == 'POST':
+        print("post request")
+        print(form.data)
+    return render_template('channel_table_demo.html',form=form)        

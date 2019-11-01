@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+    {% block content %}
+    {% set channel_list = ['488','555','647','790'] %}
+               <form method="post">
+            <table>
+                <tr>
+                    <th>channel</th>
+                    <th>Registration</th>
+                    <th>Injection detection</th>
+                    <th>Probe detection</th>
+                    <th>Cell detection</th>
+
+                </tr>
+                <tr>   
+                    <td>488</td>
+                    <td>{{form.channel1_registration}}</td>
+                    <td>{{form.channel1_injection_detection}}</td>
+                    <td>{{form.channel1_probe_detection}}</td>
+                    <td>{{form.channel1_cell_detection}}</td>
+
+                </tr>
+                <tr>   
+                    <td>555</td>
+                    <td>{{form.channel2_registration}}</td>
+                    <td>{{form.channel2_injection_detection}}</td>
+                    <td>{{form.channel2_probe_detection}}</td>
+                    <td>{{form.channel2_cell_detection}}</td>
+
+                </tr>
+            </table>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-success mt-2") }}
+            </div>
+        </form>
+
+    {% endblock content %}

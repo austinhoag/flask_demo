@@ -82,3 +82,17 @@ a.article-title:hover {
 #larger {
 font-size: 24px;
 }
+
+ul.checkbox li { 
+  border: 1px transparent solid; 
+  display:inline-block;
+  width:12em;
+}
+
+
+div.form-group li { 
+  border: 1px transparent solid; 
+  display:inline-block;
+  width:4em;
+
+}
