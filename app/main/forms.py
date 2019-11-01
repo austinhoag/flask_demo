@@ -40,4 +40,16 @@ class TimeForm(FlaskForm):
 
 class BusinessForm(FlaskForm):
     name = StringField('Business Name')
-    hours = FieldList(FormField(TimeForm), min_entries=2,max_entries=7)
+    hours = FieldList(FormField(TimeForm), min_entries=0,max_entries=7)
+
+class CustomTimeForm(FlaskForm):
+    opening = StringField('Opening Hour')
+    closing = StringField('Closing Hour')
+    day = HiddenField('Day')
+
+class CustomBusinessForm(FlaskForm):
+	name = StringField('Business Name')
+	number_of_days = IntegerField('Number of days the business is open',widget=html5.NumberInput(),
+		validators=[InputRequired()],id='ndays')
+	customize_business_hours = BooleanField('Customize your business hours?',id='customize_checkbox')
+	hours = FieldList(FormField(TimeForm), min_entries=0,max_entries=7)

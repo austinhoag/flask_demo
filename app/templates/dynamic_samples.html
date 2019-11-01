@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block content %}
+<form method="POST" action="" id="myform">
+		{{ form.hidden_tag() }}
+			<fieldset class="form-group" id="myfieldset">
+				<div class="form-group">
+					{% if form.title.flags.required %}*{% endif %}
+
+					{{ form.title.label(class="form-control-label") }}
+					{% if form.title.errors %}
+						{{ form.title(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.title.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.title(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+
+				<div class="form-group">
+					{% if form.number_of_samples.flags.required %}*{% endif %}
+
+					{{ form.number_of_samples.label(class="form-control-label") }}
+					{% if form.number_of_samples.errors %}
+						{{ form.number_of_samples(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.number_of_samples.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.number_of_samples(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+				<div class="form-check">
+					{{ form.customize_sample_names(class="form-check-input mb-4") }}
+					{{ form.customize_sample_names.label(class="form-check-label mb-4") }}
+				</div>
+			</fieldset>
+			<div class="form-group">
+				{{ form.submit(class="btn btn-info mt-4") }}	            
+			</div>
+			
+		</form>
+
+ <script type="text/javascript">
+
+       $("#customize_checkbox").click(function() {
+    // this function will get executed every time the #mybox element is clicked (or tab-spacebar changed)
+    if($(this).is(":checked")) // "this" refers to the element that fired the event
+    {
+        var num = Number($('#nsamples').val());
+        // console.log(num);
+        // console.log(typeof(num));
+        var text = "";
+        // alert('mybox is checked');
+       for (i = 0; i < num; i++) {
+          text += '<div><input type="text" name="name[]" class="form-control" placeholder="Enter Sample Name"/></div>';
+        }
+        $('#myfieldset').append(text);
+    }
+});
+    </script>
+
+{% endblock content %}
+	

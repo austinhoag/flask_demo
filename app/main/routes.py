@@ -1,7 +1,9 @@
 from flask import render_template, request, redirect, Blueprint, session, url_for, flash, Markup,Request, jsonify
 from app import tasks, db
-from .forms import SvgForm, PickCounty, ExperimentForm, BusinessForm
+from .forms import (SvgForm, PickCounty, ExperimentForm,
+                    BusinessForm, CustomBusinessForm )
 from app import tables
+
 
 
 main = Blueprint('main',__name__)
@@ -75,7 +77,6 @@ def dynamic_samples():
     form = ExperimentForm()
     return render_template('dynamic_samples.html',form=form) 
 
-
 @main.route('/test_fieldlist', methods=['post','get'])
 def test_fieldlist():
     form = BusinessForm()
@@ -89,5 +90,49 @@ def test_fieldlist():
                 )
             )
         return render_template('results.html', results=results)
-    print(form.errors)
+    # print(form.errors)
+    hour1_dict = {'opening':'9am','closing':'5pm'}
+    hour2_dict = {'opening':'10am','closing':'6pm'}
+    hour_dict_list = [hour1_dict,hour2_dict]
+    # while len(form.hours) > 0:
+    #     form.hours.pop_entry()
+    for ii in range(len(hour_dict_list)):
+        form.hours.append_entry(hour_dict_list[ii])
+    # form.name.data = "Test"
     return render_template('test_fieldlist.html', form=form)
+
+@main.route("/checkbox_getjson") 
+def checkbox_getjson(): 
+    form = BusinessForm()
+    return render_template('checkbox_getjson.html',form=form)
+
+@main.route('/_render_form_fields/')
+def _render_form_fields():
+    nsamples = request.args.get('nsamples', '1', type=int)
+    form = request.args.get('form',type=CustomBusinessForm)
+    hour1_dict = {'opening':'9am','closing':'5pm'}
+    hour2_dict = {'opening':'10am','closing':'6pm'}
+    hour_dict_list = [hour1_dict,hour2_dict]
+    print(nsamples)
+    print(form)
+    for ii in range(len(hour_dict_list)):
+        form.hours.append_entry(hour_dict_list[ii])
+    # print("in _render_forms()")
+    
+@main.route('/_generate_form_data/')
+def _generate_form_data():
+    nsamples = request.args.get('nsamples', '1', type=int)
+
+    data = []
+    for ii in range(nsamples):
+        hour_dict = {'opening':'%i'%ii,'closing':'5pm','day':ii+1}        
+        data.append(hour_dict)
+    
+    return jsonify(data)
+
+@main.route("/checkbox_getjson_flask",methods=['GET','POST']) 
+def checkbox_getjson_flask(): 
+    form = CustomBusinessForm()
+    if form.validate_on_submit:
+        print(form.data)
+    return render_template('checkbox_getjson_flask.html',form=form)

@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+	{% block content %}
+
+	<form method="post" action="">
+		{{ form.hidden_tag() }}
+		{{ form.name.label}}
+	    {{ form.name}}
+	    <div class="form-group">
+			{% if form.number_of_days.flags.required %}*{% endif %}
+
+			{{ form.number_of_days.label(class="form-control-label") }}
+			{% if form.number_of_days.errors %}
+				{{ form.number_of_days(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+					{% for error in form.number_of_days.errors %}
+						<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+			{% else %}
+				{{ form.number_of_days(class="form-control form-control-lg") }}
+			{% endif %}
+		</div>
+	    <div class="form-check">
+			{{ form.customize_business_hours(class="form-check-input mb-4") }}
+			{{ form.customize_business_hours.label(class="form-check-label mb-4") }}
+		</div>
+	    
+	    <br/>
+	    <fieldset id="form-hours">
+		</fieldset>
+	    <input type="submit"/>
+	</form>
+
+
+<script type="text/javascript">
+
+       $("#customize_checkbox").click(function() {
+    // this function will get executed every time the #mybox element is clicked (or tab-spacebar changed)
+    if($(this).is(":checked")) // "this" refers to the element that fired the event
+    {
+        var num = Number($('#ndays').val());
+        var send = {
+            nsamples: num
+        };
+        function myFunc(item,index) {
+        	$('#form-hours').append('{{ form.hours.append_entry() }}')
+        	$('#opening').val = item.opening;
+        	}
+           
+        $.getJSON("{{ url_for('main._generate_form_data') }}", send, function(data) {
+            data.forEach(myFunc);
+    
+        }
+                        )
+            
+    }
+});
+    </script>
+
+	{% endblock content %}

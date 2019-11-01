@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+    {% block content %}
+        <form method="post" action="submit.php">
+
+            <div class="form-group fieldGroup">
+                <div class="input-group">
+                    <input type="text" name="name[]" class="form-control" placeholder="Enter name"/>
+                    <input type="text" name="email[]" class="form-control" placeholder="Enter email"/>
+                    <div class="input-group-addon"> 
+                        <a href="javascript:void(0)" class="btn btn-success addMore"><span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span> Add</a>
+                    </div>
+                </div>
+            </div>
+
+            <input type="submit" name="submit" class="btn btn-primary" value="SUBMIT"/>
+
+        </form>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+        //group add limit
+        var maxGroup = 10;
+
+        //add more fields group
+        $(".addMore").click(function(){
+            if($('body').find('.fieldGroup').length < maxGroup){
+                var fieldHTML = '<div class="form-group fieldGroup">'+$(".fieldGroup").html()+'</div>';
+                console.log($(".fieldGroup").html())
+                $('body').find('.fieldGroup:last').after(fieldHTML);
+            }else{
+                alert('Maximum '+maxGroup+' groups are allowed.');
+            }
+        });
+
+        //remove fields group
+        $("body").on("click",".remove",function(){ 
+            $(this).parents(".fieldGroup").remove();
+        });
+    });
+    </script>
+    {% endblock content %}
