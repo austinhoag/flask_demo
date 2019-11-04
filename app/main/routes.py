@@ -186,4 +186,14 @@ def channel_table_demo():
     elif request.method == 'POST':
         print("post request")
         print(form.data)
-    return render_template('channel_table_demo.html',form=form)        
+    return render_template('channel_table_demo.html',form=form)     
+
+
+@main.route("/table_swapper",methods=['GET']) 
+def table_swapper(): 
+    test_data = [{'username':'user1','age':20,'sex':'F'},
+                 {'username':'user2','age':22,'sex':'M'},
+                 {'username':'user3','age':30,'sex':'F'}]
+    table = tables.TestTable(test_data)
+    table.table_id = 'mytable'
+    return render_template('table_swapper.html',table=table)       
