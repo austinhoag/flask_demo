@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+	{% block content %}
+		{{ table1 }}
+
+		<input id = "tableSwapper1" type="button"  class="btn btn-sm btn-secondary mt-1" value="Click to change table orientation (vertical/horizontal)"/>
+
+		{{ table2 }}
+
+		<input id = "tableSwapper2" type="button"  class="btn btn-sm btn-secondary mt-1" value="Click to change table orientation (vertical/horizontal)"/>
+
+
+		<script src="{{ url_for('static',filename='javascript/library.js') }}"> </script>
+		<script type="text/javascript" defer="defer">
+
+		   $("#tableSwapper1").click(function() {
+		   MYLIBRARY.swapTable("{{table1.table_id}}");
+		});
+
+		   $("#tableSwapper2").click(function() {
+		   MYLIBRARY.swapTable("{{table2.table_id}}");
+		});
+		</script>
+	{% endblock content %}

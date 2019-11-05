@@ -197,3 +197,15 @@ def table_swapper():
     table = tables.TestTable(test_data)
     table.table_id = 'mytable'
     return render_template('table_swapper.html',table=table)       
+
+
+@main.route("/table_swapper_v2",methods=['GET']) 
+def table_swapper_v2(): 
+    test_data = [{'username':'user1','age':20,'sex':'F'},
+                 {'username':'user2','age':22,'sex':'M'},
+                 {'username':'user3','age':30,'sex':'F'}]
+    table1 = tables.TestTable(test_data)
+    table1.table_id = 'table1'
+    table2 = tables.TestTable(test_data)
+    table2.table_id = 'table2'
+    return render_template('table_swapper_v2.html',table1=table1,table2=table2)   
