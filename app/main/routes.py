@@ -7,7 +7,6 @@ from .forms import (SvgForm, PickCounty, ExperimentForm,
 from app import tables
 
 
-
 main = Blueprint('main',__name__)
 
 # from app import celery
@@ -20,7 +19,6 @@ def home():
 
 @main.route('/process/<name>')
 def process(name):
-
     tasks.reverse.delay(name) # starts celery process
     return 'I sent an async request'
 
@@ -209,3 +207,7 @@ def table_swapper_v2():
     table2 = tables.TestTable(test_data)
     table2.table_id = 'table2'
     return render_template('table_swapper_v2.html',table1=table1,table2=table2)   
+
+@main.route("/test_redirect",methods=['GET','POST']) 
+def test_redirect(): 
+    return redirect(url_for('main.home'))
