@@ -14,6 +14,7 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
+
 formatter = logging.Formatter('%(asctime)s:%(name)s:%(message)s')
 
 ''' Make the file handler to deal with logging to file '''
@@ -39,7 +40,6 @@ def home():
 
 @main.route('/process/<name>')
 def process(name):
-
     tasks.reverse.delay(name) # starts celery process
     return 'I sent an async request'
 
@@ -229,6 +229,7 @@ def table_swapper_v2():
     table2.table_id = 'table2'
     return render_template('table_swapper_v2.html',table1=table1,table2=table2)   
 
+<<<<<<< HEAD
 
 @main.route("/table_swapper_v3",methods=['GET']) 
 def table_swapper_v3(): 
@@ -303,3 +304,4 @@ def correlation_matrix():
 def show_correlation_matrix():
     
     return render_template('plot.html')
+

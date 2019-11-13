@@ -7,11 +7,16 @@ from celery import Celery
 from flask_sqlalchemy import SQLAlchemy
 import datajoint as dj
 from flask_wtf.csrf import CSRFProtect
+import socket
 
 dj.config['database.host'] = '127.0.0.1'
 dj.config['database.port'] = 3306
 dj.config['database.user'] = 'ahoag'
-dj.config['database.password'] = 'p@sswd'
+
+if socket.gethostname() == 'braincogs00.pni.princeton.edu':
+	dj.config['database.password'] = 'gaoha'
+else:
+	dj.config['database.password'] = 'p@sswd'
 
 db = dj.create_virtual_module('ahoag_flask_demo','ahoag_flask_demo',create_schema=True) # creates the schema if it does not already exist. Can't add tables from within the app because create_schema=False
 
