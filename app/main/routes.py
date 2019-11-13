@@ -1,12 +1,31 @@
-from flask import render_template, request, redirect, Blueprint, session, url_for, flash, Markup,Request, jsonify
+from flask import (render_template, request, redirect, Blueprint,
+                   session, url_for, flash, Markup,Request,
+                   jsonify, send_file)
 from app import tasks, db
 from .forms import (SvgForm, PickCounty, ExperimentForm,
                     BusinessForm, CustomBusinessForm,
                     CheckboxGridForm, GradeForm, WorkReportForm,
-                    ChannelListForm )
+                    ChannelListForm, ExpForm, StateForm )
 from app import tables
+from app.main.utils import do_plot
+import pandas as pd
+import logging
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
+formatter = logging.Formatter('%(asctime)s:%(name)s:%(message)s')
+
+''' Make the file handler to deal with logging to file '''
+file_handler = logging.FileHandler('logs/experiment_routes.log')
+file_handler.setFormatter(formatter)
+
+stream_handler = logging.StreamHandler() # level already set at debug from logger.setLevel() above
+
+stream_handler.setFormatter(formatter)
+
+logger.addHandler(stream_handler)
+logger.addHandler(file_handler)
 
 main = Blueprint('main',__name__)
 
@@ -209,3 +228,78 @@ def table_swapper_v2():
     table2 = tables.TestTable(test_data)
     table2.table_id = 'table2'
     return render_template('table_swapper_v2.html',table1=table1,table2=table2)   
+
+
+@main.route("/table_swapper_v3",methods=['GET']) 
+def table_swapper_v3(): 
+    test_data = [{'username':'user1','age':20,'sex':'F'},
+                 {'username':'user2','age':22,'sex':'M'},
+                 {'username':'user3','age':30,'sex':'F'}]
+    table1 = tables.TestTable(test_data)
+    table1.table_id = 'vertical'
+    table2 = tables.TestTable(test_data)
+    table2.table_id = 'horizontal1'
+    return render_template('table_swapper_v3.html',table1=table1,table2=table2)   
+
+@main.route("/new_exp/",methods=['GET','POST']) 
+def new_exp(): 
+    # custom_clearing = request.args.get('custom_clearing',0)
+    form = ExpForm(request.form)
+    custom_clearing=None
+    if form.validate_on_submit():
+        print("validated")
+        if form.custom_clearing_submit.data == True:
+            custom_clearing = 1
+            for ii in range(form.number_of_samples.data):
+                form.clearing_samples.append_entry()
+        elif form.uniform_clearing_submit.data == True:
+            custom_clearing = 0 
+            form.clearing_samples.append_entry()
+        
+
+        # redirect_url = '%s?custom_clearing=1' % url_for('main.new_exp')
+        # return redirect(redirect_url)
+    else:
+        print(form.errors)
+    if 'column_name' not in locals():
+        column_name = ''
+    print("custom_clearing =", custom_clearing)
+    return render_template('experiments/new_exp.html', title='new_experiment',
+        form=form,legend='New Experiment',column_name=column_name,custom_clearing=custom_clearing)  
+
+class State(object):
+    def __init__(self):
+        self.state='California'
+
+@main.route("/form_autofill",methods=['GET','POST']) 
+def form_autofill(): 
+    # myobj = [{'grade':'A+'}]
+    state_contents = db.State() & 'state="California"'
+    state_dict = state_contents.fetch1()
+    # frame = pd.DataFrame(state_contents.fetch())
+    # frame = db.State().fetch('format="frame"')
+    # print(frame)
+    # state = State()
+    # print(db.State())
+    # print(state_contents.fetch1())
+    form = StateForm()
+    for key,val in list(state_dict.items()):
+        if username in form._fields.keys():
+            form[key].data = val
+        # print(key,val)
+    return render_template('form_autofill.html', form=form)  
+
+
+@main.route('/plots/breast_cancer_data/correlation_matrix', methods=['GET'])
+def correlation_matrix():
+    bytes_obj = do_plot()
+    
+    return send_file(bytes_obj,
+                     attachment_filename='plot.png',
+                     mimetype='image/png')
+
+
+@main.route('/plots/breast_cancer_data/show_correlation_matrix', methods=['GET'])
+def show_correlation_matrix():
+    
+    return render_template('plot.html')

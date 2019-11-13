@@ -6,6 +6,7 @@ from app.config import Config
 from celery import Celery
 from flask_sqlalchemy import SQLAlchemy
 import datajoint as dj
+from flask_wtf.csrf import CSRFProtect
 
 dj.config['database.host'] = '127.0.0.1'
 dj.config['database.port'] = 3306
@@ -21,6 +22,8 @@ cel = Celery(__name__,broker='amqp://localhost//',
 def create_app(config_class=Config):
 	""" Create the flask app instance"""
 	app = Flask(__name__)
+	csrf = CSRFProtect(app)
+
 	app.config.from_object(config_class)
 
 	cel.conf.update(app.config)
