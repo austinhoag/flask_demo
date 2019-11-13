@@ -229,8 +229,6 @@ def table_swapper_v2():
     table2.table_id = 'table2'
     return render_template('table_swapper_v2.html',table1=table1,table2=table2)   
 
-<<<<<<< HEAD
-
 @main.route("/table_swapper_v3",methods=['GET']) 
 def table_swapper_v3(): 
     test_data = [{'username':'user1','age':20,'sex':'F'},
