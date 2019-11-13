@@ -303,7 +303,7 @@ def correlation_matrix():
 def show_correlation_matrix():
     
     return render_template('plot.html')
-@main.route('test_redirect')
+@main.route('/test_redirect')
 def test_redirect():
     print(url_for('main.home'))
     return redirect(url_for('main.home'))
