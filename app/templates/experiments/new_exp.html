@@ -1,0 +1,166 @@
+{% extends "layout.html" %}
+{% block content %}
+	<h1 id='primary_header' align="center">New Request Form</h1>
+	 <div class="content-section">
+
+		<form method="POST" action="">
+			{{ form.hidden_tag() }}
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-2 mt-4">Background Info</legend>
+
+				<div class="form-group">
+					{% if form.number_of_samples.flags.required %}*{% endif %}
+					{{ form.number_of_samples.label(class="form-control-label") }}
+					{% if form.number_of_samples.errors %}
+						{{ form.number_of_samples(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.number_of_samples.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.number_of_samples(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+
+				<div class="form-group">
+					{% if form.sample_prefix.flags.required %}*{% endif %}
+					{{ form.sample_prefix.label(class="form-control-label") }}
+					{% if form.sample_prefix.errors %}
+						{{ form.sample_prefix(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.sample_prefix.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.sample_prefix(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+				
+				<!-- CLEARING section -->
+				<hr class='class-3'>
+				<h3 class='border-bottom'>Clearing Info</h3>
+				
+				<div class="form-group">
+					<span> Will clearing protocol be the same for all samples?</span>					
+						{{ form.uniform_clearing_submit(class="btn btn-outline-info mt-2") }}
+						{{ form.custom_clearing_submit(class="btn btn-outline-info mt-2") }}
+				</div>
+
+				<!-- Handle clearing for each sample -->
+				<hr class='class-2'>
+				<div>
+					{% for clearing_entry in form.clearing_samples %}
+						{% if custom_clearing == 1 %}
+					        <legend class="form-control-label">Sample {{ loop.index }}: {{form.sample_prefix.data }}-{{ loop.index }} </legend>
+					    {% else %}
+					    	<legend class="form-control-label">Sample {{ loop.index }}: {{form.sample_prefix.data }}-{{ loop.index }} <br/>(Your entries below will apply to all of your samples) </legend>
+						{% endif %}
+				        <hr>
+
+				        <div class="form-group">
+							{% if clearing_entry.perfusion_date.flags.required %}*{% endif %}
+							{{ clearing_entry.perfusion_date.label(class="form-control-label") }}
+							{% if clearing_entry.perfusion_date.errors %}
+								{{ clearing_entry.perfusion_date(class="form-control form-control-lg is-invalid") }}
+								<div class="invalid-feedback">
+									{% for error in clearing_entry.perfusion_date.errors %}
+										<span>{{ error }}</span>
+									{% endfor %}
+								</div>
+							{% else %}
+								{{ clearing_entry.perfusion_date(class="form-control form-control-lg") }}
+							{% endif %}
+						</div>
+
+						<div class="form-group">
+							{% if clearing_entry.expected_handoff_date.flags.required %}*{% endif %}
+							{{ clearing_entry.expected_handoff_date.label(class="form-control-label") }}
+							{% if clearing_entry.expected_handoff_date.errors %}
+								{{ clearing_entry.expected_handoff_date(class="form-control form-control-lg is-invalid") }}
+								<div class="invalid-feedback">
+									{% for error in clearing_entry.expected_handoff_date.errors %}
+										<span>{{ error }}</span>
+									{% endfor %}
+								</div>
+							{% else %}
+								{{ clearing_entry.expected_handoff_date(class="form-control form-control-lg") }}
+							{% endif %}
+						</div>
+
+				        <div class="form-group">
+							{% if clearing_entry.clearing_protocol.flags.required %}*{% endif %}
+							{{ clearing_entry.clearing_protocol.label(class="form-control-label") }}
+							{% if clearing_entry.clearing_protocol.errors %}
+								{{ clearing_entry.clearing_protocol(class="form-control form-control-lg is-invalid") }}
+								<div class="invalid-feedback">
+									{% for error in clearing_entry.clearing_protocol.errors %}
+										<span>{{ error }}</span>
+									{% endfor %}
+								</div>
+							{% else %}
+								{{ clearing_entry.clearing_protocol(class="form-control form-control-lg") }}
+							{% endif %}
+						</div>
+
+						
+						<div class="form-group">
+							{% if clearing_entry.antibody1.flags.required %}*{% endif %}
+							{{ clearing_entry.antibody1.label(class="form-control-label") }}
+							{% if clearing_entry.antibody1.errors %}
+								{{ clearing_entry.antibody1(class="form-control form-control-lg is-invalid") }}
+								<div class="invalid-feedback">
+									{% for error in clearing_entry.antibody1.errors %}
+										<span>{{ error }}</span>
+									{% endfor %}
+								</div>
+							{% else %}
+								{{ clearing_entry.antibody1(class="form-control form-control-lg") }}
+							{% endif %}
+						</div>
+
+						<div class="form-group">
+							{% if clearing_entry.antibody2.flags.required %}*{% endif %}
+							{{ clearing_entry.antibody2.label(class="form-control-label") }}
+							{% if clearing_entry.antibody2.errors %}
+								{{ clearing_entry.antibody2(class="form-control form-control-lg is-invalid") }}
+								<div class="invalid-feedback">
+									{% for error in clearing_entry.antibody2.errors %}
+										<span>{{ error }}</span>
+									{% endfor %}
+								</div>
+							{% else %}
+								{{ clearing_entry.antibody2(class="form-control form-control-lg") }}
+							{% endif %}
+						</div>
+
+					{% if not loop.last %}
+						<br/>
+		            	<hr class='class-2'>
+		            {% endif %}
+
+					{% endfor %}
+				</div>
+
+				
+
+			</fieldset>
+			<hr class='class-3'>
+			<hr class='class-4'>
+			<div class="form-group">
+				{{ form.submit(class="btn btn-success mt-2") }}
+			</div>
+	
+		</form>
+	</div>
+
+<!-- For focusing to a given tag -->
+{% if column_name %}
+	<script>
+	window.onload = function() {
+	  document.getElementById("{{column_name}}").focus();
+	};
+	</script>
+{% endif %}
+{% endblock content %}

@@ -7,9 +7,11 @@ from .forms import (SvgForm, PickCounty, ExperimentForm,
                     CheckboxGridForm, GradeForm, WorkReportForm,
                     ChannelListForm, ExpForm, StateForm )
 from app import tables
-from app.main.utils import do_plot
+from app.main.utils import do_plot, table_sorter
 import pandas as pd
 import logging
+
+from functools import partial
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -37,6 +39,10 @@ main = Blueprint('main',__name__)
 def home(): 
     form = SvgForm()
     return render_template('home.html',form=form)
+
+@main.route("/demo")
+def demo():
+    return render_template('demo.html')
 
 @main.route('/process/<name>')
 def process(name):
@@ -229,7 +235,6 @@ def table_swapper_v2():
     table2.table_id = 'table2'
     return render_template('table_swapper_v2.html',table1=table1,table2=table2)   
 
-<<<<<<< HEAD
 
 @main.route("/table_swapper_v3",methods=['GET']) 
 def table_swapper_v3(): 
@@ -277,12 +282,7 @@ def form_autofill():
     # myobj = [{'grade':'A+'}]
     state_contents = db.State() & 'state="California"'
     state_dict = state_contents.fetch1()
-    # frame = pd.DataFrame(state_contents.fetch())
-    # frame = db.State().fetch('format="frame"')
-    # print(frame)
-    # state = State()
-    # print(db.State())
-    # print(state_contents.fetch1())
+
     form = StateForm()
     for key,val in list(state_dict.items()):
         if username in form._fields.keys():
@@ -305,3 +305,67 @@ def show_correlation_matrix():
     
     return render_template('plot.html')
 
+@main.route('/dynamic_flask_table', methods=['GET'])
+def dynamic_flask_table():
+    sort = request.args.get('sort', 'state') # first is the variable name, second is default value
+    reverse = (request.args.get('direction', 'asc') == 'desc')
+    contents = db.County()
+    # print(contents.fetch('county'))
+    # sorted_contents = sorted(contents.fetch(as_dict=True),
+    #         key=partial(table_sorter,sort_key=sort),reverse=reverse)
+
+    table = tables.create_dynamic_table(contents,sort_by=sort,sort_reverse=reverse)
+    # print(sorted_contents)
+    return render_template('dynamic_table.html',table=table)
+
+
+@main.route('/flask_table_custom_border', methods=['GET'])
+def flask_table_custom_border():
+    sort = request.args.get('sort', 'state') # first is the variable name, second is default value
+    reverse = (request.args.get('direction', 'asc') == 'desc')
+    contents = db.County()
+    # print(contents.fetch('county'))
+    # sorted_contents = sorted(contents.fetch(as_dict=True),
+    #         key=partial(table_sorter,sort_key=sort),reverse=reverse)
+
+    table = tables.create_custom_border_table(contents,sort_by=sort,sort_reverse=reverse)
+    # print(sorted_contents)
+    return render_template('custom_table_border.html',table=table)    
+
+
+@main.route('/flask_table_custom_columns', methods=['GET'])
+def flask_table_custom_columns():
+    data = [{'number_of_samples':5,"uniform_clearing":True},{'testcol':'no'},{'testcol':'maybe'}]
+    # print(contents.fetch('county'))
+    # sorted_contents = sorted(contents.fetch(as_dict=True),
+    #         key=partial(table_sorter,sort_key=sort),reverse=reverse)
+    table = tables.CustomTestTable(data)
+    # print(sorted_contents)
+    return render_template('custom_table_cols.html',table=table) 
+
+
+@main.route('/flask_table_custom_rows', methods=['GET'])
+def flask_table_custom_rows():
+    test_data = [{'username':'user1','age':20,'sex':'F'},
+                 {'username':'user2','age':22,'sex':'M'},
+                 {'username':'user3','age':30,'sex':'F'}]
+    table = tables.dynamic_table_custom_rows(test_data)
+    return render_template('test_customrows.html',table=table)
+
+
+@main.route('/flask_table_custom_data', methods=['GET'])
+def flask_table_custom_data():
+    test_data = [{'username':'user1','age':20,'sex':'F'},
+                 {'username':'user2','age':22,'sex':'M'},
+                 {'username':'user3','age':30,'sex':'F'}]
+    table = tables.TestTableCustomCol(test_data)
+    return render_template('test_customrows.html',table=table)
+
+
+@main.route('/flask_table_custom_linkcol', methods=['GET'])
+def flask_table_custom_linkcol():
+    test_data = [{'username':'user1','age':20,'sex':'F'},
+                 {'username':'user2','age':22,'sex':'M'},
+                 {'username':'user3','age':30,'sex':'F'}]
+    table = tables.TestTableCustomLinkCol(test_data)
+    return render_template('test_customrows.html',table=table)

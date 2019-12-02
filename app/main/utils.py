@@ -28,3 +28,9 @@ def do_plot():
     plt.savefig(bytes_image, format='png')
     bytes_image.seek(0)
     return bytes_image
+
+def table_sorter(dic,sort_key):
+    if type(dic[sort_key]) == str:
+        return dic[sort_key].lower()
+    else:
+        return (dic[sort_key] is None, dic[sort_key])
