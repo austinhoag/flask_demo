@@ -35,6 +35,6 @@ def create_app(config_class=Config):
 
 	from app.main.routes import main
 
-	app.register_blueprint(main)
+	app.register_blueprint(main,url_prefix="/dogs")
 
 	return app

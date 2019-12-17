@@ -8,30 +8,46 @@
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-		<link rel="stylesheet" type="text/css" href="/static/main.css">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='ls_v0/main.css') }}">
 		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
 		<title>Flask Demo</title>
 </head>
 <body>
 		<header class="site-header">
-		</header>
-		<main role="main" class="container">
-			<div class="row">
-				<div class="col-md-8">
-					  {% with messages = get_flashed_messages(with_categories=true) %}
-						{% if messages %}
-						  {% for category, message in messages %}
-							<div class="alert alert-{{ category }}">
-							  {{ message }}
+			<nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+				<div class="container">
+				<!-- Navbar Left Side -->
+
+					<a class="navbar-brand mr-4" href="/">Flask Demo</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarToggle">
+						
+							<div class="navbar-nav mr-auto">
+								<a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a>
 							</div>
-						  {% endfor %}
-						{% endif %}
-					  {% endwith %}
-					{% block content %}{% endblock %}
+						
+					</div>
 				</div>
-				
-		</main>
+			</nav>
+		</header>
+	<main role="main" class="container">
+		<div class="row">
+			<div class="col-md-8">
+				  {% with messages = get_flashed_messages(with_categories=true) %}
+					{% if messages %}
+					  {% for category, message in messages %}
+						<div class="alert alert-{{ category }}">
+						  {{ message }}
+						</div>
+					  {% endfor %}
+					{% endif %}
+				  {% endwith %}
+				{% block content %}{% endblock %}
+			</div>
+	</main>
 	
 
 

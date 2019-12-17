@@ -235,7 +235,10 @@ def table_swapper_v2():
     table2.table_id = 'table2'
     return render_template('table_swapper_v2.html',table1=table1,table2=table2)   
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3fd03b956b88dcc0ed500f69b31c4f783964df57
 @main.route("/table_swapper_v3",methods=['GET']) 
 def table_swapper_v3(): 
     test_data = [{'username':'user1','age':20,'sex':'F'},
@@ -299,11 +302,11 @@ def correlation_matrix():
                      attachment_filename='plot.png',
                      mimetype='image/png')
 
-
 @main.route('/plots/breast_cancer_data/show_correlation_matrix', methods=['GET'])
 def show_correlation_matrix():
     
     return render_template('plot.html')
+<<<<<<< HEAD
 
 @main.route('/dynamic_flask_table', methods=['GET'])
 def dynamic_flask_table():
@@ -369,3 +372,9 @@ def flask_table_custom_linkcol():
                  {'username':'user3','age':30,'sex':'F'}]
     table = tables.TestTableCustomLinkCol(test_data)
     return render_template('test_customrows.html',table=table)
+=======
+@main.route('/test_redirect')
+def test_redirect():
+    print(url_for('main.home'))
+    return redirect(url_for('main.home'))
+>>>>>>> 3fd03b956b88dcc0ed500f69b31c4f783964df57
