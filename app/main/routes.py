@@ -1,11 +1,11 @@
 from flask import (render_template, request, redirect, Blueprint,
                    session, url_for, flash, Markup,Request,
                    jsonify, send_file)
-from app import tasks, db
+# from app import tasks, db
 from .forms import (SvgForm, PickCounty, ExperimentForm,
                     BusinessForm, CustomBusinessForm,
                     CheckboxGridForm, GradeForm, WorkReportForm,
-                    ChannelListForm, ExpForm, StateForm )
+                    ChannelListForm, ExpForm, StateForm, DateTimeForm )
 from app import tables
 from app.main.utils import do_plot, table_sorter
 import pandas as pd
@@ -42,7 +42,14 @@ def home():
 
 @main.route("/demo")
 def demo():
-    return render_template('demo.html')
+    
+    return render_template('demo.html',)
+
+
+@main.route("/test_focus")
+def test_focus():
+    column_name = "test_input"
+    return render_template('test_focus.html',column_name=column_name)
 
 @main.route('/process/<name>')
 def process(name):
@@ -235,10 +242,9 @@ def table_swapper_v2():
     table2.table_id = 'table2'
     return render_template('table_swapper_v2.html',table1=table1,table2=table2)   
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 3fd03b956b88dcc0ed500f69b31c4f783964df57
+
+
 @main.route("/table_swapper_v3",methods=['GET']) 
 def table_swapper_v3(): 
     test_data = [{'username':'user1','age':20,'sex':'F'},
@@ -306,7 +312,7 @@ def correlation_matrix():
 def show_correlation_matrix():
     
     return render_template('plot.html')
-<<<<<<< HEAD
+
 
 @main.route('/dynamic_flask_table', methods=['GET'])
 def dynamic_flask_table():
@@ -372,9 +378,60 @@ def flask_table_custom_linkcol():
                  {'username':'user3','age':30,'sex':'F'}]
     table = tables.TestTableCustomLinkCol(test_data)
     return render_template('test_customrows.html',table=table)
-=======
-@main.route('/test_redirect')
-def test_redirect():
-    print(url_for('main.home'))
-    return redirect(url_for('main.home'))
->>>>>>> 3fd03b956b88dcc0ed500f69b31c4f783964df57
+
+@main.route("/test_tablewidth") 
+def test_tablewidth(): 
+    test_data = [{'username':'user1user1user1user1user1user1user1user1user1user1','age':20,'sex':'F'},
+                 {'username':'user2','age':22342342342342342322323423423423222323423423423222323423423423222323423423423222323423423423,'sex':'M'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},
+                 {'username':'user3','age':30,'sex':'F'},]
+    table = tables.TestTable(test_data)
+    return render_template('test_tablewidth.html',table=table)
+
+@main.route('/test_tooltip', methods=['GET'])
+def test_tooltip():
+    form = GradeForm()
+    return render_template('test_tooltip.html',form=form)
+
+@main.route('/js_fill_form_field', methods=['GET'])
+def js_fill_form_field():
+    """ Test filling out a form field by clicking 
+    a button using javascript """
+    form = GradeForm()
+    return render_template('js_fill_form_field.html',form=form)
+
+@main.route('/js_fill_datetime', methods=['GET'])
+def js_fill_datetime():
+    """ Test filling out a datetime form field by clicking 
+    a button using javascript """
+    form = DateTimeForm()
+    if request.method == 'POST':
+        logger.debug("Post request")
+        if form.validate_on_submit():
+            logger.debug("form validated")
+    return render_template('js_fill_datetime_form_field.html',form=form)    

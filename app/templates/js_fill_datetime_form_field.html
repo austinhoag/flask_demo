@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+	{% block content %}
+
+	<form method="post" action="">
+		{{ form.datetime1.label}}
+	    {{ form.datetime1()}}
+		{% set mykey = 'datetime1' %}
+			<button  class="btn btn-primary" onclick="autoFill(key='{{mykey}}')">Click me</button>
+		{{ form.datetime2.label}}
+	    {{ form.datetime2()}}
+	    {{ form.hidden_tag() }}
+	    
+	</form>
+	
+
+	<script>
+	function autoFill(key) {
+	console.log("Made it into the function")
+	var d = new Date();
+	var day = d.getDate();
+	var month = d.getMonth()
+	var year = d.getFullYear()
+	var hour = d.getHours()
+	var minute = d.getMinutes()
+	var second = d.getSeconds()
+	var s = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second;
+	
+	console.log(s);
+	document.getElementById(key).value = s;
+	}
+</script>
+	{% endblock content %}

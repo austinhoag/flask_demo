@@ -4,6 +4,9 @@ from wtforms import (StringField, SubmitField, TextAreaField, SelectField,
 					 SelectMultipleField, DateField)
 from wtforms.validators import DataRequired, Length, InputRequired, ValidationError, Email, Optional 
 from wtforms.widgets import html5, CheckboxInput, ListWidget
+from wtforms.fields.html5 import DateField, DateTimeLocalField
+
+datetimeformat='%Y-%m-%dT%H:%M' # To get form.field.data to work. Does not work with the default (bug)
 
 # from lightserv.models import Experiment
 
@@ -85,8 +88,11 @@ class CheckboxGridForm(FlaskForm):
     submit = SubmitField("Set User Choices")
 
 class GradeForm(FlaskForm):
-	grade = StringField('Student grade')
+	grade1 = StringField('Student 1 grade')
+	grade2 = StringField('Student 2 grade')
 	submit = SubmitField("Submit")
+
+
 
 class WorkReportEntry(FlaskForm):
     index = HiddenField('index')
@@ -220,3 +226,19 @@ class ExpForm(FlaskForm):
 class StateForm(FlaskForm):
 	state = StringField('State')
 	submit = SubmitField('Submit request')
+
+
+
+def OptionalDateTimeLocalField(description='',validators=[],format=datetimeformat):
+	""" A custom field that makes the DateTimeLocalField optional
+	and applies a specific formatting to fix a bug in the default formatting """
+	validators.append(Optional())
+	field = DateTimeLocalField(description,validators,format=format)
+	return field
+
+class DateTimeForm(FlaskForm):
+	""" The form for entering clearing information """
+	
+	datetime1 = OptionalDateTimeLocalField('Datetime 1')
+	datetime2 = OptionalDateTimeLocalField('Datetime 2')
+	submit = SubmitField("Submit")

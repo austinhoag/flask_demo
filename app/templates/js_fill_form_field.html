@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+	{% block content %}
+
+	<form method="post" action="">
+		{{ form.grade1.label}}
+	    {{ form.grade1()}}
+
+		{{ form.grade1.label}}
+	    {{ form.grade2()}}
+	    {{ form.hidden_tag() }}
+	    
+	</form>
+	{% set mygrade = 'grade1' %}
+	<button  class="btn btn-primary" onclick="myFunction(grade='{{mygrade}}')">Click me</button>
+
+	<script>
+	function myFunction(grade) {
+	console.log("Made it into the function")
+
+	  document.getElementById(grade).value = "A+";
+	}
+</script>
+	{% endblock content %}
