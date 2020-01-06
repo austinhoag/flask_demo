@@ -1,10 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, SubmitField, TextAreaField, SelectField,
 					 BooleanField, HiddenField, IntegerField, FieldList, FormField,
-					 SelectMultipleField, DateField)
+					 SelectMultipleField)
+from wtforms import DateField as OGDateField
 from wtforms.validators import DataRequired, Length, InputRequired, ValidationError, Email, Optional 
 from wtforms.widgets import html5, CheckboxInput, ListWidget
 from wtforms.fields.html5 import DateField, DateTimeLocalField
+# from wtforms.fields.html5 import DateTimeLocalField
+
 
 datetimeformat='%Y-%m-%dT%H:%M' # To get form.field.data to work. Does not work with the default (bug)
 
@@ -128,10 +131,10 @@ class ChannelListForm(FlaskForm):
 
 	submit = SubmitField('Save')  
 
-def OptionalDateField(description='',validators=[]):
+def OptionalDateField(description='',validators=[],format=''):
 	""" A custom field that makes the DateField optional """
 	validators.append(Optional())
-	field = DateField(description,validators)
+	field = DateField(description,validators,format=format)
 	return field
 
 class ClearingForm(FlaskForm):
@@ -228,7 +231,6 @@ class StateForm(FlaskForm):
 	submit = SubmitField('Submit request')
 
 
-
 def OptionalDateTimeLocalField(description='',validators=[],format=datetimeformat):
 	""" A custom field that makes the DateTimeLocalField optional
 	and applies a specific formatting to fix a bug in the default formatting """
@@ -241,4 +243,13 @@ class DateTimeForm(FlaskForm):
 	
 	datetime1 = OptionalDateTimeLocalField('Datetime 1')
 	datetime2 = OptionalDateTimeLocalField('Datetime 2')
+	submit = SubmitField("Submit")
+
+
+class SimpleDateForm(FlaskForm):
+	""" The form for clearing a single sample within an experiment """
+	# Basic info
+	name = StringField('name')
+	date1 = StringField('Date1',validators=[Optional()])
+	date2 = StringField('Date2',validators=[Optional()])
 	submit = SubmitField("Submit")

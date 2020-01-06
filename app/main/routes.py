@@ -5,13 +5,16 @@ from flask import (render_template, request, redirect, Blueprint,
 from .forms import (SvgForm, PickCounty, ExperimentForm,
                     BusinessForm, CustomBusinessForm,
                     CheckboxGridForm, GradeForm, WorkReportForm,
-                    ChannelListForm, ExpForm, StateForm, DateTimeForm )
+                    ChannelListForm, ExpForm, StateForm, DateTimeForm,
+                    SimpleDateForm )
 from app import tables
 from app.main.utils import do_plot, table_sorter
 import pandas as pd
 import logging
+from datetime import datetime
 
 from functools import partial
+from .utils import Item, SubItem
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -435,3 +438,48 @@ def js_fill_datetime():
         if form.validate_on_submit():
             logger.debug("form validated")
     return render_template('js_fill_datetime_form_field.html',form=form)    
+
+
+@main.route('/js_copy_fields', methods=['GET'])
+def js_copy_fields():
+    """ Test copying data from one field to another using javascrip 
+    by clicking a button """
+    form = GradeForm()
+    return render_template('js_copy_fields.html',form=form)
+
+
+@main.route('/fill_datefield', methods=['GET','POST'])
+def fill_datefield():
+    """ Test auto-filling a datefield  """
+    form = SimpleDateForm()
+    todaysdate = datetime.today().date()
+    
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            logger.debug("VALIDATED!!")
+            # date1 = form.date1.data
+            # print(date1)
+            # print(type(date1))
+            # form.date1.data = date
+            form.date2.data = todaysdate
+        else:
+            print(form.errors)
+    elif request.method == 'GET':
+        form.date1.data = todaysdate
+        # form.date2.data = todaysdate
+        logger.debug("GET request")
+    # logger.debug(form.date1.data)
+    # logger.debug(form.date2.data)
+    return render_template('fill_datefield.html',form=form)
+
+
+@main.route('/nested_table')
+def nested_table ():
+    items = [Item('Name1', 'Description1', [SubItem('r1sr1c1', 'r1sr1c2'),
+                                            SubItem('r1sr2c1', 'r1sr2c2')]),
+             Item('Name2', 'Description2', [SubItem('r2sr1c1', 'r2sr1c2'),
+                                            SubItem('r2sr2c1', 'r2sr2c2')]),
+             ]
+
+    table = tables.ItemTable(items)
+    return render_template('nested_table.html',table=table)

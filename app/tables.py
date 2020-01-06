@@ -1,4 +1,4 @@
-from flask_table import Table, Col, LinkCol, create_table 
+from flask_table import Table, Col, LinkCol, create_table, NestedTableCol
 from flask import url_for
 from app.main.utils import table_sorter
 from functools import partial
@@ -215,3 +215,15 @@ class TestTableCustomLinkCol(Table):
     age = Col('age',column_html_attrs=column_html_attrs)
     sex = LinkColOtherItemLookup('sex',endpoint='main.home',column_html_attrs=column_html_attrs)
     
+
+class SubItemTable(Table):
+    border=True
+    col1 = Col('Sub-column 1')
+    col2 = Col('Sub-column 2')
+
+
+class ItemTable(Table):
+    border=True
+    name = Col('Name')
+    description = Col('Description')
+    subtable = NestedTableCol('Subtable', SubItemTable)

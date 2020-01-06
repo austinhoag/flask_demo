@@ -34,3 +34,15 @@ def table_sorter(dic,sort_key):
         return dic[sort_key].lower()
     else:
         return (dic[sort_key] is None, dic[sort_key])
+
+
+class SubItem(object):
+    def __init__(self, col1, col2):
+        self.col1 = col1
+        self.col2 = col2
+
+class Item(object):
+    def __init__(self, name, description, subtable):
+        self.name = name
+        self.description = description
+        self.subtable = subtable
