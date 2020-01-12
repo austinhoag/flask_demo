@@ -1,7 +1,7 @@
 from flask import (render_template, request, redirect, Blueprint,
                    session, url_for, flash, Markup,Request,
                    jsonify, send_file)
-# from app import tasks, db
+# from app import tasks
 from .forms import (SvgForm, PickCounty, ExperimentForm,
                     BusinessForm, CustomBusinessForm,
                     CheckboxGridForm, GradeForm, WorkReportForm,
@@ -35,7 +35,7 @@ logger.addHandler(file_handler)
 
 main = Blueprint('main',__name__)
 
-# from app import celery
+from app import cel
 
 @main.route("/") 
 @main.route("/home") 
@@ -483,3 +483,29 @@ def nested_table ():
 
     table = tables.ItemTable(items)
     return render_template('nested_table.html',table=table)
+
+@main.route('/nested_dynamic_table')
+def nested_dynamic_table():
+    items = [Item('Name1', 'Description1', [SubItem('r1sr1c1', 'r1sr1c2'),
+                                            SubItem('r1sr2c1', 'r1sr2c2')]),
+             Item('Name2', 'Description2', [SubItem('r2sr1c1', 'r2sr1c2'),
+                                            SubItem('r2sr2c1', 'r2sr2c2')]),
+             ]
+
+    table = tables.ItemTableDynamicSubTable(items)
+    return render_template('nested_table.html',table=table)
+
+@main.route('/test_celery')
+def test_celery():
+    print(cel.conf)
+    string_to_reverse = 'lightserv'
+    reverse.delay(string_to_reverse)
+    return render_template('home.html')
+
+@cel.task()
+def hello():
+    return "hello world"
+
+@cel.task()
+def reverse(name):
+    return name[::-1]

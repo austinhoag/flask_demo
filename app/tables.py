@@ -221,9 +221,21 @@ class SubItemTable(Table):
     col1 = Col('Sub-column 1')
     col2 = Col('Sub-column 2')
 
-
 class ItemTable(Table):
     border=True
     name = Col('Name')
     description = Col('Description')
     subtable = NestedTableCol('Subtable', SubItemTable)
+
+class ItemTableDynamicSubTable(Table):
+    border=True
+    name = Col('Name')
+    description = Col('Description')
+    subtable_options = {
+    'table_id':'dynamic_subtable',
+    'border':True
+    }
+    subtable_class = create_table('subtable',options=subtable_options)
+    subtable_class.add_column('col1',Col('col1'))
+    subtable_class.add_column('col2',Col('col2'))
+    subtable = NestedTableCol('Subtable', subtable_class)
