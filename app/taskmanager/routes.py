@@ -28,7 +28,7 @@ logger.addHandler(file_handler)
 taskmanager = Blueprint('taskmanager',__name__)
 
 @taskmanager.route("/submit_job") 
-def submit_jobs(): 
+def submit_job(): 
     command = """sbatch --parsable test_slurm_scripts/submit.sh """ 
     port = 22
     username = 'ahoag'
@@ -41,9 +41,7 @@ def submit_jobs():
         client.connect(hostname, port=port, username=username, allow_agent=False,look_for_keys=True)
 
         stdin, stdout, stderr = client.exec_command(command)
-        stdout_str = stdout.read().decode("utf-8").strip('\n')
-        jobid = int(stdout_str)
-        print(jobid)
+        jobid = str(stdout.read().decode("utf-8").strip('\n'))
         # jobid = 16046124
         status = 'SUBMITTED'
         entry_dict = {'jobid':jobid,'username':username,'status':status}
@@ -56,43 +54,14 @@ def submit_jobs():
 
 @cel.task()
 def status_checker():
+    """ Checks all outstanding job statuses on spock
+    and updates their status in the db """
     query = db_admin.SpockJobManager() & 'status!="COMPLETED"' & 'status!="FAILED"'
-    jobids = query.fetch('jobid')
-    jobid = jobids[-1]
-    port = 22
-    username = 'ahoag'
-    hostname = 'spock.pni.princeton.edu'
-    command = """sacct -b -P -n -a  -j {} | head -1 | cut -d "|" -f2 """.format(jobid)
-    
-    try:
-        client = paramiko.SSHClient()
-        client.load_system_host_keys()
-        client.set_missing_host_key_policy(paramiko.WarningPolicy)
-        
-        client.connect(hostname, port=port, username=username, allow_agent=False,look_for_keys=True)
+    jobids = list(query.fetch('jobid'))
+    if jobids == []:
+        return "No jobs to check"
+    jobids_str = ','.join(str(jobid) for jobid in jobids)
 
-        stdin, stdout, stderr = client.exec_command(command)
-        
-        stdout_str = stdout.read().decode("utf-8").strip('\n')
-        print(stdout_str)
-        
-        # jobid = 16046124
-        # status = 'SUBMITTED'
-        # entry_dict = {'jobid':jobid,'username':username,'status':status}
-        # db_admin.SpockJobManager.insert1(entry_dict)    
-    finally:
-        client.close()
-    return stdout_str
-    # return (str(jobid),stdout_str)
-    # return f"Status for jobids {jobids} checked"
-
-@taskmanager.route("/check_all_statuses") 
-def check_all_statuses():
-    # query = db_admin.SpockJobManager() & 'status!="COMPLETED"' & 'status!="FAILED"'
-    # jobids = 
-    # jobids = query.fetch('jobid')
-    # jobid = jobids[-1]
-    jobids_str = '16046124,16046126,16046129'
     port = 22
     username = 'ahoag'
     hostname = 'spock.pni.princeton.edu'
@@ -108,17 +77,59 @@ def check_all_statuses():
             # command += """sacct -b -P -n -a  -j {} | head -1 | cut -d "|" -f2; """.format(jobid)
         command = """sacct -X -b -P -n -a  -j {} | cut -d "|" -f2""".format(jobids_str)
         stdin, stdout, stderr = client.exec_command(command)
-        stdout_str = stdout.read().decode("utf-8").replace('\n',',')
-        status_codes = stdout_str.split(',')
-        
-        # jobid = 16046124
-        # status = 'SUBMITTED'
-        # entry_dict = {'jobid':jobid,'username':username,'status':status}
-        # db_admin.SpockJobManager.insert1(entry_dict)    
+        stdout_str = stdout.read().decode("utf-8")
+        status_codes = stdout_str.strip('\n').split('\n')
+        insert_list = []
+        for ii in range(len(jobids)):
+            jobid = jobids[ii]
+            status_code = status_codes[ii]
+            insert_dict = {'jobid':jobid,'username':username,'status':status_code}
+            insert_list.append(insert_dict)
+       
+        db_admin.SpockJobManager.insert(insert_list,replace=True)
     finally:
         client.close()
     time_end = time.time()
-    print(f"Took {time_end-time_start} seconds" )
-    return stdout_str
+    # print(f"Took {time_end-time_start} seconds" )
+    return jsonify(jobids=jobids,status_codes=status_codes)
+
+@taskmanager.route("/check_all_statuses") 
+def check_all_statuses():
+    query = db_admin.SpockJobManager() & 'status!="COMPLETED"' & 'status!="FAILED"'
+    jobids = list(query.fetch('jobid'))
+    if jobids == []:
+        return "No jobs to check"
+    jobids_str = ','.join(str(jobid) for jobid in jobids)
+    # jobids_str = '16046124,16046126,16046129'
+    port = 22
+    username = 'ahoag'
+    hostname = 'spock.pni.princeton.edu'
+    time_start = time.time()
+    try:
+        client = paramiko.SSHClient()
+        client.load_system_host_keys()
+        client.set_missing_host_key_policy(paramiko.WarningPolicy)
+        
+        client.connect(hostname, port=port, username=username, allow_agent=False,look_for_keys=True)
+        # jobids_str = ','.join(str(jobid) for jobid in jobids)
+        # for jobid in jobids:
+            # command += """sacct -b -P -n -a  -j {} | head -1 | cut -d "|" -f2; """.format(jobid)
+        command = """sacct -X -b -P -n -a  -j {} | cut -d "|" -f2""".format(jobids_str)
+        stdin, stdout, stderr = client.exec_command(command)
+        stdout_str = stdout.read().decode("utf-8")
+        status_codes = stdout_str.strip('\n').split('\n')
+        insert_list = []
+        for ii in range(len(jobids)):
+            jobid = jobids[ii]
+            status_code = status_codes[ii]
+            insert_dict = {'jobid':jobid,'username':username,'status':status_code}
+            insert_list.append(insert_dict)
+       
+        db_admin.SpockJobManager.insert(insert_list,replace=True)
+    finally:
+        client.close()
+    time_end = time.time()
+    # print(f"Took {time_end-time_start} seconds" )
+    return jsonify(jobids=jobids,status_codes=status_codes)
     # return (str(jobid),stdout_str)
     # return f"Status for jobids {jobids} checked"

@@ -6,11 +6,11 @@ dj.config['database.host'] = '127.0.0.1'
 dj.config['database.port'] = 3306
 
 dj.config['database.user'] = 'ahoag'
-dj.config['database.password'] = 'p@sswd'
+dj.config['database.password'] = 'gaoha'
 
-schema = dj.schema('ahoag_admin_demo')
+schema = dj.schema('ahoag_admin_flask_demo')
 schema.drop()
-schema = dj.schema('ahoag_admin_demo')
+schema = dj.schema('ahoag_admin_flask_demo')
 
 @schema 
 class UserActionLog(dj.Manual):
@@ -27,7 +27,7 @@ class UserActionLog(dj.Manual):
 @schema 
 class SpockJobManager(dj.Manual):
     definition = """    # Spock job management table 
-    jobid  : int # the jobid on spock
+    jobid  : varchar(16) # the jobid on spock
     ---
     username : varchar(32)
     status : enum("SUBMITTED","COMPLETED","FAILED","RUNNING","PENDING")
