@@ -15,10 +15,10 @@ class Config(object):
 	MAIL_USERNAME = os.environ.get('EMAIL_USER')
 	MAIL_PASSWORD = os.environ.get('EMAIL_PASS')
 	CELERY_BROKER_URL='amqp://localhost//',
-	CELERY_RESULT_BACKEND='db+mysql+pymysql://ahoag:gaoha@localhost:3306/ahoag_celery_test'
+	CELERY_RESULT_BACKEND='db+mysql+pymysql://ahoag:p@sswd@localhost:3306/ahoag_celery_test'
 	CELERYBEAT_SCHEDULE = {
     'job_status_checker': {
         'task': 'app.taskmanager.routes.status_checker',
-        'schedule': timedelta(seconds=10)
+        'schedule': timedelta(seconds=15)
     },
 }

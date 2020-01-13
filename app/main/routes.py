@@ -6,7 +6,7 @@ from .forms import (SvgForm, PickCounty, ExperimentForm,
                     BusinessForm, CustomBusinessForm,
                     CheckboxGridForm, GradeForm, WorkReportForm,
                     ChannelListForm, ExpForm, StateForm, DateTimeForm,
-                    SimpleDateForm )
+                    SimpleDateForm, CheckBoxHideForm)
 from app import tables
 from app.main.utils import do_plot, table_sorter
 import pandas as pd
@@ -472,7 +472,6 @@ def fill_datefield():
     # logger.debug(form.date2.data)
     return render_template('fill_datefield.html',form=form)
 
-
 @main.route('/nested_table')
 def nested_table ():
     items = [Item('Name1', 'Description1', [SubItem('r1sr1c1', 'r1sr1c2'),
@@ -509,3 +508,11 @@ def hello():
 @cel.task()
 def reverse(name):
     return name[::-1]
+
+@main.route('/unhide_field', methods=['GET','POST'])
+def unhide_field():
+    """ A route for a form where a checkbox
+    hides or unhids a field  """
+    form = CheckBoxHideForm()
+    
+    return render_template('unhide_field.html',form=form)

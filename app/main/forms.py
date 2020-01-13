@@ -253,3 +253,9 @@ class SimpleDateForm(FlaskForm):
 	date1 = StringField('Date1',validators=[Optional()])
 	date2 = StringField('Date2',validators=[Optional()])
 	submit = SubmitField("Submit")
+
+
+class CheckBoxHideForm(FlaskForm):
+    checker = BooleanField('Check this box:')
+    city = StringField('City:', id="city")
+    submit = SubmitField('Submit')

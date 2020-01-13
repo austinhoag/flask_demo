@@ -16,12 +16,12 @@ import socket
 # if socket.gethostname() == 'braincogs00.pni.princeton.edu':
 
 dj.config['database.user'] = 'ahoag'
-dj.config['database.password'] = 'gaoha'
+dj.config['database.password'] = 'p@sswd'
 
 db_admin = dj.create_virtual_module('admin_demo','ahoag_admin_flask_demo',create_schema=True)
 
 cel = Celery(__name__,broker='amqp://localhost//',
-	backend='db+mysql+pymysql://ahoag:gaoha@localhost:3306/ahoag_celery_test')
+	backend='db+mysql+pymysql://ahoag:p@sswd@localhost:3306/ahoag_celery_test')
 
 def create_app(config_class=Config):
 	""" Create the flask app instance"""
