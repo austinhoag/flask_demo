@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<form method="POST" action="">
+	{{ form.hidden_tag() }}
+	<fieldset class="form-group">
+		<!-- <button type="button" onclick="myFunction()">Click to enter a city</button>	 -->
+		<input type="checkbox" name="checkfield" id="g01-01"  onchange="togglefield(this)"/>
+		<div class="form-group" id="citygroup" style="display: none">
+			{{ form.city.label }}
+			{{ form.city(class="form-control form-control-sm") }}
+		</div>
+
+		<div class="form-group">
+			{{ form.submit(class="btn btn-info mt-4") }}	            
+		</div>
+	</fieldset>
+</form>
+
+
+
+<script>
+function togglefield(checkboxElem) {
+	var x = document.getElementById("citygroup");
+	if (checkboxElem.checked) {
+		x.style.display = "block";
+	} else {
+		x.style.display = "none";
+		}
+	}
+</script>
+
+
+{% endblock content %}
