@@ -17,6 +17,7 @@ import socket
 
 dj.config['database.user'] = 'ahoag'
 dj.config['database.password'] = 'p@sswd'
+dj.config['database.port'] = 3307
 
 db_admin = dj.create_virtual_module('admin_demo','ahoag_admin_flask_demo',create_schema=True)
 

@@ -516,3 +516,8 @@ def unhide_field():
     form = CheckBoxHideForm()
     
     return render_template('unhide_field.html',form=form)
+
+@main.route('/test_scroll_table', methods=['GET'])
+def test_scroll_table():
+    
+    return render_template('test_scroll_table.html',)
